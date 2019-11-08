@@ -2,15 +2,16 @@ package main
 
 import (
 	"log"
+	"os"
 
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
 func main() {
 	var (
-		port      = "6677"
-		publicURL = "https://dotapollbot.herokuapp.com"
-		token     = "923261617:AAGIM0wr4rrUZxFL7xCAn1i62eQK5h7pCUE"
+		port      = os.Getenv("PORT")
+		publicURL = os.Getenv("PUBLIC_URL") // you must add it to your config vars
+		token     = os.Getenv("TOKEN")      // you must add it to your config vars
 	)
 
 	webhook := &tb.Webhook{
