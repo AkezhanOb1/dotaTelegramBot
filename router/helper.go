@@ -1,7 +1,9 @@
 package router
 
 import (
+	"fmt"
 	"regexp"
+	"strconv"
 	"time"
 )
 
@@ -34,11 +36,11 @@ func checkPlayer(player string, players []string) bool {
 
 func listOfPlayers(players []string) string {
 	if len(players) == 0 {
-		return "no players"
+		return "нету голосов"
 	}
-	squad := ""
-	for _, player := range players {
-		squad = squad + "@" + player + "\n"
+	squad := fmt.Sprintf("всего %s игроков \n", strconv.Itoa(len(players)))
+	for i, player := range players {
+		squad = squad + strconv.Itoa(i+1) + ") @" + player + "\n"
 	}
 	return squad
 }
