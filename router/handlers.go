@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/AkezhanOb1/dotaTelegramBot/config"
+	config "github.com/AkezhanOb1/dotaTelegramBot/config/bot"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 

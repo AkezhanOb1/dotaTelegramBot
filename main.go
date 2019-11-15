@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/AkezhanOb1/dotaTelegramBot/config"
+	config "github.com/AkezhanOb1/dotaTelegramBot/config/bot"
 	"github.com/AkezhanOb1/dotaTelegramBot/router"
 )
 
