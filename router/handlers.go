@@ -2,6 +2,7 @@ package router
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/AkezhanOb1/dotaTelegramBot/config"
 	tb "gopkg.in/tucnak/telebot.v2"
@@ -16,7 +17,13 @@ var (
 
 //Start - responsible for handling /start comand
 func Start(m *tb.Message) {
-	message := fmt.Sprintf("/vote - начать голосование + обнулить результаты предыдущего голосования надо указать время игры (/vote 5)\n /in - список игроков на старте \n /out - список пиздюков \n /restart - обнулить результаты предыдущего голосования \n /time - узнать время игры \n /changetime - изменить время игры время указывается через пробел (/changetime 5)")
+	message := fmt.Sprintf(`/vote - начать голосование + обнулить результаты предыдущего голосования, надо указать время игры (/vote 5)
+	/in - дать согласие на игру
+	/out - отказаться от игры
+	/inlist - список игроков на старте
+	/outlist - список пиздюков
+	/time - узнать время игры
+	/changetime - изменить время игры время указывается через пробел (/changetime 5)`)
 	bot.Send(m.Chat, message)
 }
 
@@ -30,11 +37,16 @@ func Vote(m *tb.Message) {
 		return
 	}
 	gameTime = dotaTime
-	bot.Send(
+
+	message, _ := bot.Send(
 		m.Chat,
 		fmt.Sprintf("Паца хотят в дотку 5х5, сегодня в %s", dotaTime),
 		&tb.ReplyMarkup{InlineKeyboard: config.VoteKeys},
 	)
+	err := bot.Pin(message, tb.Silent)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 //GameTime - list of all players not playing today
@@ -63,6 +75,22 @@ func GameTimeChange(m *tb.Message) {
 
 }
 
+//InPlayer - adds player to the list of players ready to play
+func InPlayer(m *tb.Message) {
+	nickname := m.Sender.Username
+	outPlayers = removePlayerFromList(nickname, outPlayers)
+	inPlayers = addPlayerToList(nickname, inPlayers)
+	bot.Send(m.Chat, fmt.Sprintf("%s в игре, список работяг /inlist", nickname))
+}
+
+//OutPlayer - adds player to the list of players ready who is not playing today
+func OutPlayer(m *tb.Message) {
+	nickname := m.Sender.Username
+	inPlayers = removePlayerFromList(nickname, inPlayers)
+	outPlayers = addPlayerToList(nickname, outPlayers)
+	bot.Send(m.Chat, fmt.Sprintf("%s минус, список петухов /outlist", nickname))
+}
+
 //InPlayers - list of all players ready to play today
 func InPlayers(m *tb.Message) {
 	squad := listOfPlayers(inPlayers)
@@ -80,11 +108,8 @@ func PollAgreement(c *tb.Callback) {
 	bot.Respond(c, &tb.CallbackResponse{
 		ShowAlert: false,
 	})
-	nickname := c.Sender.Username
-	outPlayers = removePlayerFromList(nickname, outPlayers)
-	if ok := checkPlayer(nickname, inPlayers); !ok {
-		inPlayers = append(inPlayers, nickname)
-	}
+	c.Message.Sender = c.Sender
+	InPlayer(c.Message)
 }
 
 //PollDisAgreement - handler for players who disagreed with the poll
@@ -92,9 +117,6 @@ func PollDisAgreement(c *tb.Callback) {
 	bot.Respond(c, &tb.CallbackResponse{
 		ShowAlert: false,
 	})
-	nickname := c.Sender.Username
-	inPlayers = removePlayerFromList(nickname, inPlayers)
-	if ok := checkPlayer(nickname, outPlayers); !ok {
-		outPlayers = append(outPlayers, nickname)
-	}
+	c.Message.Sender = c.Sender
+	OutPlayer(c.Message)
 }

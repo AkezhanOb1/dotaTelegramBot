@@ -45,11 +45,18 @@ func listOfPlayers(players []string) string {
 	return squad
 }
 
-func removePlayerFromList(player string, players []string) []string {
-	for i, nick := range players {
+func removePlayerFromList(player string, list []string) []string {
+	for i, nick := range list {
 		if player == nick {
-			players = append(players[:i], players[i+1:]...)
+			list = append(list[:i], list[i+1:]...)
 		}
 	}
-	return players
+	return list
+}
+
+func addPlayerToList(player string, list []string) []string {
+	if ok := checkPlayer(player, list); !ok {
+		list = append(list, player)
+	}
+	return list
 }
