@@ -1,4 +1,4 @@
-package config
+package buttons
 
 import (
 	tb "gopkg.in/tucnak/telebot.v2"

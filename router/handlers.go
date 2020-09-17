@@ -5,6 +5,7 @@ import (
 	"log"
 
 	config "github.com/AkezhanOb1/dotaTelegramBot/config/bot"
+	"github.com/AkezhanOb1/dotaTelegramBot/style/buttons"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
@@ -17,7 +18,7 @@ var (
 
 //Start - responsible for handling /start comand
 func Start(m *tb.Message) {
-	message := fmt.Sprintf(`/vote - начать голосование + обнулить результаты предыдущего голосования, надо указать время игры (/vote 5)
+	message := fmt.Sprintf(`/game - начать голосование + обнулить результаты предыдущего голосования, надо указать время игры (/vote 5)
 	/in - дать согласие на игру
 	/out - отказаться от игры
 	/inlist - список игроков на старте
@@ -40,8 +41,8 @@ func Vote(m *tb.Message) {
 
 	message, _ := bot.Send(
 		m.Chat,
-		fmt.Sprintf("Паца хотят в дотку 5х5, сегодня в %s", dotaTime),
-		&tb.ReplyMarkup{InlineKeyboard: config.VoteKeys},
+		fmt.Sprintf("э супергеройлар, сегодня в %s дота 5x5", dotaTime),
+		&tb.ReplyMarkup{InlineKeyboard: buttons.VoteKeys},
 	)
 	err := bot.Pin(message, tb.Silent)
 	if err != nil {

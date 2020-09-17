@@ -3,19 +3,20 @@ package main
 import (
 	config "github.com/AkezhanOb1/dotaTelegramBot/config/bot"
 	"github.com/AkezhanOb1/dotaTelegramBot/router"
+	"github.com/AkezhanOb1/dotaTelegramBot/style/buttons"
 )
 
 func main() {
-	b := config.Bot
-	b.Handle("/start", router.Start)
-	b.Handle("/vote", router.Vote)
-	b.Handle("/time", router.GameTime)
-	b.Handle("/changetime", router.GameTimeChange)
-	b.Handle("/inlist", router.InPlayers)
-	b.Handle("/outlist", router.OutPlayers)
-	b.Handle("/in", router.InPlayer)
-	b.Handle("/out", router.OutPlayer)
-	b.Handle(&config.GoBtn, router.PollAgreement)
-	b.Handle(&config.NopeBtn, router.PollDisAgreement)
-	b.Start()
+	bot := config.Bot
+	bot.Handle("/start", router.Start)
+	bot.Handle("/game", router.Vote)
+	bot.Handle("/time", router.GameTime)
+	bot.Handle("/changetime", router.GameTimeChange)
+	bot.Handle("/inlist", router.InPlayers)
+	bot.Handle("/outlist", router.OutPlayers)
+	bot.Handle("/in", router.InPlayer)
+	bot.Handle("/out", router.OutPlayer)
+	bot.Handle(&buttons.GoBtn, router.PollAgreement)
+	bot.Handle(&buttons.NopeBtn, router.PollDisAgreement)
+	bot.Start()
 }
